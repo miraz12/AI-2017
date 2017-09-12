@@ -96,6 +96,8 @@ class MyAgentState
 	}
 }
 
+
+
 class MyAgentProgram implements AgentProgram {
 
 	private int initnialRandomActions = 10;
@@ -105,6 +107,60 @@ class MyAgentProgram implements AgentProgram {
 	// Here you can define your variables!
 	public int iterationCounter = 1000;
 	public MyAgentState state = new MyAgentState();
+	
+	
+	public Action changeRotation(int direction)
+	{
+		if(direction == state.ACTION_TURN_RIGHT)
+		{
+    		System.out.println("kaos 1");
+    		state.agent_last_action=state.ACTION_TURN_RIGHT;
+    		switch (state.agent_direction) {
+				case MyAgentState.NORTH:
+					state.agent_direction = MyAgentState.EAST;
+					break;
+				case MyAgentState.EAST:
+					state.agent_direction = MyAgentState.SOUTH;
+					break;
+				case MyAgentState.SOUTH:
+					state.agent_direction = MyAgentState.WEST;
+					break;
+				case MyAgentState.WEST:
+					state.agent_direction = MyAgentState.NORTH;
+					break;
+			}
+    		return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				
+				
+		}
+		
+		else if(direction == state.ACTION_TURN_LEFT)
+		{
+    		System.out.println("kaos 1");
+    		state.agent_last_action=state.ACTION_TURN_LEFT;
+    		switch (state.agent_direction) {
+				case MyAgentState.NORTH:
+					state.agent_direction = MyAgentState.WEST;
+					break;
+				case MyAgentState.EAST:
+					state.agent_direction = MyAgentState.NORTH;
+					break;
+				case MyAgentState.SOUTH:
+					state.agent_direction = MyAgentState.EAST;
+					break;
+				case MyAgentState.WEST:
+					state.agent_direction = MyAgentState.SOUTH;
+					break;
+			}
+    		return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+		}
+		else
+		{
+			System.out.print("changeRotation: ERROR!");
+		}
+		return null;
+	}
+	
 	
 	// moves the Agent to a random start position
 	// uses percepts to update the Agent position - only the position, other percepts are ignored
@@ -303,24 +359,23 @@ class MyAgentProgram implements AgentProgram {
 	    }
 	    
 
-    	if(bump){
+	    if(bump){
     		System.out.println("kaos 1");
-    		state.agent_last_action=state.ACTION_TURN_RIGHT;
-    		switch (state.agent_direction) {
-			case MyAgentState.NORTH:
-				state.agent_direction = MyAgentState.EAST;
-				break;
-			case MyAgentState.EAST:
-				state.agent_direction = MyAgentState.SOUTH;
-				break;
-			case MyAgentState.SOUTH:
-				state.agent_direction = MyAgentState.WEST;
-				break;
-			case MyAgentState.WEST:
-				state.agent_direction = MyAgentState.NORTH;
-				break;
-			}
-    		return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+    		//return this.changeRotation(state.ACTION_TURN_RIGHT);
+    		
+    		
+    		 int action = random_generator.nextInt(2);
+			    if(action==0) {
+				System.out.println("BUMP -> choosing TURN_LEFT action!");
+				return this.changeRotation(state.ACTION_TURN_LEFT);
+			    } else if (action==1) {
+				System.out.println("BUMP -> choosing TURN_RIGHT action!");
+				return this.changeRotation(state.ACTION_TURN_RIGHT);
+			    }
+			    else
+			    {
+					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+			    }
     	}
     	else
     	{
