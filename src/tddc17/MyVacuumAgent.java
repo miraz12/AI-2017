@@ -8,8 +8,13 @@ import aima.core.agent.AgentProgram;
 import aima.core.agent.Percept;
 import aima.core.agent.impl.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
+class Position{
+	int x = -1;
+	int y = -1;
+}
 class MyAgentState
 {
 	public int[][] world = new int[30][30];
@@ -105,15 +110,15 @@ class MyAgentProgram implements AgentProgram {
 	
 	
 	// Here you can define your variables!
-	public int iterationCounter = 1000;
+	public int iterationCounter = 30*30*2;
 	public MyAgentState state = new MyAgentState();
-	
-	
+		
+	//Help-function to update new direction of agent based on current direction and action.
 	public Action changeRotation(int direction)
 	{
+		
 		if(direction == state.ACTION_TURN_RIGHT)
 		{
-    		System.out.println("kaos 1");
     		state.agent_last_action=state.ACTION_TURN_RIGHT;
     		switch (state.agent_direction) {
 				case MyAgentState.NORTH:
@@ -136,7 +141,6 @@ class MyAgentProgram implements AgentProgram {
 		
 		else if(direction == state.ACTION_TURN_LEFT)
 		{
-    		System.out.println("kaos 1");
     		state.agent_last_action=state.ACTION_TURN_LEFT;
     		switch (state.agent_direction) {
 				case MyAgentState.NORTH:
@@ -191,7 +195,7 @@ class MyAgentProgram implements AgentProgram {
 		for(int i = 0; state.world.length > i; i++){
 			for(int j = 0; state.world.length > j; j++){
 				
-				if(state.world[j][i] == state.CLEAR)
+				if(state.world[j][i] == state.CLEAR || state.world[j][i] == state.HOME)
 				{
 					if(state.world[j-1][i] == state.UNKNOWN)
 					{
@@ -256,6 +260,7 @@ class MyAgentProgram implements AgentProgram {
 	    
 	    // State update based on the percept value and the last action
 	    state.updatePosition((DynamicPercept)percept);
+	    System.out.println("Direction: " + state.agent_direction);
 	    
 	    if (bump) {
 			switch (state.agent_direction) {
@@ -283,11 +288,12 @@ class MyAgentProgram implements AgentProgram {
 	    
 	    // Next action selection based on the percept value
 	    
-	    //If done
+	    //check if agent is home, if it is, then check if the whole world is explored 
 	    if(home && isDone()){
-	    	
     		return NoOpAction.NO_OP;
 	    }
+	    
+	   
 	        
 	    if (dirt)
 	    {
@@ -296,92 +302,87 @@ class MyAgentProgram implements AgentProgram {
 	    	return LIUVacuumEnvironment.ACTION_SUCK;
 	    } 
 	    
-	    
+	    //If the node west of the agent is unexplored, rotate towards it or go straight if the agent is facing the node.
+	    //Exception for when the agent is facing east, since the agent can't rotate 180°.
 	    if(state.world[state.agent_x_position - 1][state.agent_y_position] == 0 && state.agent_direction != MyAgentState.EAST){
 	    	System.out.println("-x");
 	    	switch (state.agent_direction) {
 			case MyAgentState.NORTH:
-				state.agent_direction = MyAgentState.WEST;
-				state.agent_last_action = state.ACTION_TURN_LEFT;
-				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				return changeRotation(state.ACTION_TURN_LEFT);
 			case MyAgentState.SOUTH:
-				state.agent_direction = MyAgentState.WEST;
-				state.agent_last_action = state.ACTION_TURN_RIGHT;
-				return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				return changeRotation(state.ACTION_TURN_RIGHT);
 			case MyAgentState.WEST:
-				break;
+				state.agent_last_action=state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 			}
 	    }
+	    //Check if node to the east is unexplored, exception for when the agent is facing west.
 	    else if(state.world[state.agent_x_position + 1][state.agent_y_position] == 0 && state.agent_direction != MyAgentState.WEST){
 	    	System.out.println("+x");
 	    	switch (state.agent_direction) {
 			case MyAgentState.NORTH:
-				state.agent_last_action = state.ACTION_TURN_RIGHT;
-				state.agent_direction = MyAgentState.EAST;
-				return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				return changeRotation(state.ACTION_TURN_RIGHT);
 			case MyAgentState.EAST:
-				break;
+				state.agent_last_action=state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 			case MyAgentState.SOUTH:
-				state.agent_last_action = state.ACTION_TURN_LEFT;
-				state.agent_direction = MyAgentState.EAST;
-				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				return changeRotation(state.ACTION_TURN_LEFT);
 			}
 	    }
+	    //Check if node to the north is unexplored, exception for when the agent is facing south.
 	    else if(state.world[state.agent_x_position][state.agent_y_position - 1] == 0 && state.agent_direction != MyAgentState.SOUTH){
 	    	System.out.println("-y");
 	    	switch (state.agent_direction) {
 			case MyAgentState.NORTH:
-				break;
+				state.agent_last_action=state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 			case MyAgentState.EAST:
-				state.agent_last_action = state.ACTION_TURN_LEFT;
-				state.agent_direction = MyAgentState.NORTH;
-				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				return changeRotation(state.ACTION_TURN_LEFT);
 			case MyAgentState.WEST:
-				state.agent_last_action = state.ACTION_TURN_RIGHT;
-				state.agent_direction = MyAgentState.NORTH;
-				return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				return changeRotation(state.ACTION_TURN_RIGHT);
 			}
 		}
+	    //Check if node to the south is unexplored, exception for when the agent is facing north.
 	    else if(state.world[state.agent_x_position][state.agent_y_position + 1] == 0 && state.agent_direction != MyAgentState.NORTH){
 	    	System.out.println("+y");
 	    	switch (state.agent_direction) {
 			case MyAgentState.EAST:
-				state.agent_last_action = state.ACTION_TURN_RIGHT;
-				state.agent_direction = MyAgentState.SOUTH;
-				return LIUVacuumEnvironment.ACTION_TURN_RIGHT;
+				return changeRotation(state.ACTION_TURN_RIGHT);
 			case MyAgentState.SOUTH:
-				break;
+				state.agent_last_action=state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
 			case MyAgentState.WEST:
-				state.agent_last_action = state.ACTION_TURN_LEFT;
-				state.agent_direction = MyAgentState.SOUTH;
-				return LIUVacuumEnvironment.ACTION_TURN_LEFT;
+				return changeRotation(state.ACTION_TURN_LEFT);
 			}      
 	    }
 	    
 
 	    if(bump){
-    		System.out.println("kaos 1");
-    		//return this.changeRotation(state.ACTION_TURN_RIGHT);
-    		
-    		
-    		 int action = random_generator.nextInt(2);
-			    if(action==0) {
+	    	//Random variable that fixes problem with agent to get stuck in infinite loop after the whole world has been explored.
+	    	//Variable: action decides if the agent should turn right or left.
+			int action = random_generator.nextInt(1);
+			if(action==0) {
 				System.out.println("BUMP -> choosing TURN_LEFT action!");
 				return this.changeRotation(state.ACTION_TURN_LEFT);
-			    } else if (action==1) {
+			} else{
 				System.out.println("BUMP -> choosing TURN_RIGHT action!");
 				return this.changeRotation(state.ACTION_TURN_RIGHT);
-			    }
-			    else
-			    {
-					return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
-			    }
+			}
     	}
-    	else
-    	{
-    		System.out.println("kaos 2");
-    		state.agent_last_action=state.ACTION_MOVE_FORWARD;
-    		return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+	    //Random movement pattern to find unexplored nodes and home.
+    	else{
+			int action = random_generator.nextInt(6);
+			if(action==0) {
+				System.out.println("BUMP -> choosing TURN_LEFT action!");
+				return this.changeRotation(state.ACTION_TURN_LEFT);
+			} else if (action==1) {
+				System.out.println("BUMP -> choosing TURN_RIGHT action!");
+				return this.changeRotation(state.ACTION_TURN_RIGHT);
+			}
+			else{
+				state.agent_last_action=state.ACTION_MOVE_FORWARD;
+				return LIUVacuumEnvironment.ACTION_MOVE_FORWARD;
+			}
     	}
 	}
 }
