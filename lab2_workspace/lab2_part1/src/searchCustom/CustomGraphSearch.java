@@ -47,6 +47,8 @@ public class CustomGraphSearch implements SearchObject {
 		{
 			SearchNode currentNode = frontier.removeFirst();
 			
+			System.out.print("Removed Node: " + currentNode.getState() + "\n");
+			
 			explored.add(currentNode);
 			
 			GridPos currentState = currentNode.getState();
@@ -54,7 +56,7 @@ public class CustomGraphSearch implements SearchObject {
 			if(p.isGoalState(currentState))
 			{
 				path = currentNode.getPathFromRoot();
-				return path;
+				break;
 			}
 			
 			
