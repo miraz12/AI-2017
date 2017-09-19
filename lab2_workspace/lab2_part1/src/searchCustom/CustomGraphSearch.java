@@ -55,7 +55,7 @@ public class CustomGraphSearch implements SearchObject {
 			
 			if(p.isGoalState(currentState))
 			{
-				path = currentNode.getPathFromRoot();
+				path = currentNode.getPathFromRoot();	
 				break;
 			}
 			
@@ -65,16 +65,18 @@ public class CustomGraphSearch implements SearchObject {
 			for (int i = 0; i < childStates.size(); i++)
 			{
 				SearchNode childNode = new SearchNode(childStates.get(i), currentNode);
-				
-				if(!explored.contains(childStates.get(i)) && !frontier.contains(childNode))
+							
+				if(!(explored.contains(childNode) || frontier.contains(childNode)))
 				{
+
+					System.out.print("Adding Node: " + childNode.getState() + "\n");	
 					if(insertFront)
 					{
-						frontier.addNodeToFront(new SearchNode(childStates.get(i), currentNode));
+						frontier.addNodeToFront(childNode);
 					}
 					else
 					{
-						frontier.addNodeToBack(new SearchNode(childStates.get(i), currentNode));				
+						frontier.addNodeToBack(childNode);				
 					}
 				}
 			}
