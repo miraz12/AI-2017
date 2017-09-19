@@ -41,8 +41,42 @@ public class CustomGraphSearch implements SearchObject {
 		path = new ArrayList<SearchNode>();
 		
 		// Implement this!
-		System.out.println("Implement CustomGraphSearch.java!");
-		
+		//System.out.println("Implement CustomGraphSearch.java!");
+	
+		while(!frontier.isEmpty())
+		{
+			SearchNode currentNode = frontier.removeFirst();
+			
+			explored.add(currentNode);
+			
+			GridPos currentState = currentNode.getState();
+			
+			if(p.isGoalState(currentState))
+			{
+				path = currentNode.getPathFromRoot();
+				return path;
+			}
+			
+			
+			ArrayList<GridPos> childStates = p.getReachableStatesFrom(currentState);
+			
+			for (int i = 0; i < childStates.size(); i++)
+			{
+				SearchNode childNode = new SearchNode(childStates.get(i), currentNode);
+				
+				if(!explored.contains(childStates.get(i)) && !frontier.contains(childNode))
+				{
+					if(insertFront)
+					{
+						frontier.addNodeToFront(new SearchNode(childStates.get(i), currentNode));
+					}
+					else
+					{
+						frontier.addNodeToBack(new SearchNode(childStates.get(i), currentNode));				
+					}
+				}
+			}
+		}
 		
 		/* Some hints:
 		 * -Read early part of chapter 3 in the book!
