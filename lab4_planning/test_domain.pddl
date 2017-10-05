@@ -70,7 +70,7 @@
 		(shakey-at ?s ?r)
 		(not(box-in-pos ?b ?r))
 	)
-	:effect(
+	:effect(and
 		(box-in-pos ?b ?r)
 	)
  )
@@ -94,7 +94,7 @@
 		(box-fits-door ?from ?to)
 		(box-in ?from)
 	)
-	:effect(
+	:effect(and
 		(shakey-at ?s ?to)
 		(not(shakey-at ?s ?from))
 		(box-in ?b ?to)
