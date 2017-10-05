@@ -1,17 +1,17 @@
 (define (domain TEST_DOMAIN)
-(:requirements :strips :equality :typing :adl)
-(:types
+ (:requirements :strips :equality :typing :adl)
+ (:types
 	shakey
-	room 
-	object 
-	box 
+	room
+	object
+	box
 	gripper)
 	
-(:predicates
+ (:predicates
 	(adjacent	?r1  ?r2 - room)			; can move from ?l1 directly to ?l2
 	(room-lit	?r - room)					; room is lit
 	(box-fits-door	?r1 ?r2 - room)			; a box can be moved from ?r1 to ?r
-	(box-in-pos)	?b - box ?r - room)		; a box is placed under the switch	
+	(box-in-pos	?b - box ?r - room)			; a box is placed under the switch	
 	
 	(shakey-at	?s - shakey ?r - room)		; shakey ?s is at room ?r
 	(holding	?g - gripper ?o - object)	; gripper ?g is holding object ?o
@@ -22,14 +22,35 @@
 	(box-in		?b - box ?r - room)			; box ?b is in room ?r
   )
 
-(:action move                                
+ (:action move                                
 	:parameters (?s - shakey ?from ?to - room)
 
 	:precondition (and 
 		(adjacent ?from ?to)
-		(shakey-at ?s ?from))
+		(shakey-at ?s ?from)
+	)
 
 	:effect (and 
 		(shakey-at ?s ?to)
 		(not (at ?s ?from))
+	)
+ )
+ (:aciton pick-up
+	:parameters(?s - shakey ?o - object ?g - gripper ?r - room)
+
+	:precondition(and
+		(shakey-at ?s ?r)
+		(object-in ?o ?r)
+		(is-lit ?r)
+		(empty ?g)
+	)
+	:effect(
+		(not (empty ?g))
+		(holding ?o ?g)
+		(not (object-in ?o ?r))
+	)
+
+ )
+
 )
+
