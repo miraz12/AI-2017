@@ -41,12 +41,12 @@
 	:precondition(and
 		(shakey-at ?s ?r)
 		(object-in ?o ?r)
-		(is-lit ?r)
+		(room-lit ?r)
 		(empty ?g)
 	)
 	:effect(and
 		(not (empty ?g))
-		(holding ?o ?g)
+		(holding ?g ?o)
 		(not (object-in ?o ?r))
 	)
  )
@@ -55,11 +55,11 @@
 	:parameters(?s - shakey ?o - object ?g - gripper ?r - room)
 	:precondition(and
 		(shakey-at ?s ?r)
-		(holding ?o ?g)
+		(holding ?g ?o)
 	)
 	:effect(and
 		(empty ?g)
-		(not (holding ?o ?g))
+		(not (holding ?g ?o))
 		(object-in ?o ?r)
 	)
  )
@@ -92,7 +92,7 @@
 	:precondition(and
 		(shakey-at ?s ?from)
 		(box-fits-door ?from ?to)
-		(box-in ?from)
+		(box-in ?b ?from)
 	)
 	:effect(and
 		(shakey-at ?s ?to)
