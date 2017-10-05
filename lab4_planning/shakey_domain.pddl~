@@ -69,7 +69,6 @@
 	:precondition(and
 		(shakey-at ?s ?r)
 		(not(box-in-pos ?b ?r))
-		(box-in ?b ?r)
 	)
 	:effect(and
 		(box-in-pos ?b ?r)

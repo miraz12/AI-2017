@@ -1,4 +1,4 @@
 #!/bin/bash
 clear
-/home/TDDC17/bin/downward/src/lama shakey_domain.pddl shakey_problem.pddl
+/home/TDDC17/bin/downward/src/lama shakey_domain.pddl $1
 
