@@ -1,4 +1,4 @@
-(define (domain TEST_DOMAIN)
+(define (domain SHAKEY_DOMAIN)
 (:requirements :strips :equality :typing :adl)
 (:types
 	shakey

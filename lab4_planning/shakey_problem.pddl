@@ -1,5 +1,5 @@
-(define (problem TEST_PROBLEM)
-	(:domain TEST_DOMAIN)
+(define (problem SHAKEY_PROBLEM)
+	(:domain SHAKEY_DOMAIN)
 	(:objects 
 		s1 - shakey 
 		room-1 room-2 room-3 - room
