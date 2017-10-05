@@ -1,0 +1,4 @@
+#!/bin/bash
+clear
+/home/TDDC17/bin/downward/src/lama test_domain.pddl test_problem.pddl
+
