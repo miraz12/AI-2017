@@ -38,7 +38,6 @@
 
  (:action pick-up
 	:parameters(?s - shakey ?o - object ?g - gripper ?r - room)
-
 	:precondition(and
 		(shakey-at ?s ?r)
 		(object-in ?o ?r)
