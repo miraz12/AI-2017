@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/sw/jdk8/bin/java -jar /home/TDDC17/sw/fdvis/fdvis.jar $1

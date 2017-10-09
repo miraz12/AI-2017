@@ -1,0 +1,12 @@
+#!/bin/bash
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p02.pddl --log-file case1.1 --heuristic 'hff=ff()' --search 'eager_greedy([hff])'
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p03.pddl --log-file case1.2 --heuristic 'hff=ff()' --search 'eager_greedy([hff])'
+#/home/TDDC17/sw/fdlog/fast-downward.py shakey_domain.pddl shakey_problem_lights.pddl --log-file case1.2 --heuristic 'hff=ff()' --search 'eager_greedy([hff])'
+
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p02.pddl --log-file case2.1 --heuristic 'gc=goalcount()' --search 'eager_greedy([gc])'
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p03.pddl --log-file case2.2 --heuristic 'gc=goalcount()' --search 'eager_greedy([gc])'
+#/home/TDDC17/sw/fdlog/fast-downward.py shakey_domain.pddl shakey_problem_lights.pddl --log-file case2.2 --heuristic 'gc=goalcount()' --search 'eager_greedy([gc])'
+
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p02.pddl --log-file case3.1 --heuristic 'gc=goalcount()' --heuristic 'hff=ff()' --search 'eager_greedy([gc], preferred=[hff], boost=256)'
+#/home/TDDC17/sw/fdlog/fast-downward.py domain.pddl p03.pddl --log-file case3.2 --heuristic 'gc=goalcount()' --heuristic 'hff=ff()' --search 'eager_greedy([gc], preferred=[hff], boost=256)'
+/home/TDDC17/sw/fdlog/fast-downward.py shakey_domain.pddl shakey_problem_lights.pddl --log-file case3.2 --heuristic 'gc=goalcount()' --heuristic 'hff=ff()' --search 'eager_greedy([gc], preferred=[hff], boost=256)'
