@@ -97,10 +97,12 @@ public class QLearningController extends Controller {
 	void performAction(int action) {
 
 				
+		resetRockets();
+		
 		
 		if(action == 0)
 		{
-			resetRockets();
+			
 		}
 		else if(action == 1)
 		{
@@ -197,19 +199,10 @@ public class QLearningController extends Controller {
 //						);
 				
 				//System.out.println("Alpha: " + alpha(Ntable.get(prev_stateaction)));
-				tmpQValue =   prevQVal +
-						alpha(Ntable.get(prev_stateaction))*
-						(
-						previous_reward
-						+
-						GAMMA_DISCOUNT_FACTOR *
-						getMaxActionQValue(new_state)
-						-
-						prevQVal
-						);
+				tmpQValue = prevQVal + alpha(Ntable.get(prev_stateaction)) * (previous_reward + GAMMA_DISCOUNT_FACTOR * getMaxActionQValue(new_state+previous_action) - prevQVal);
 				
 				//System.out.println("tmpval: " + tmpQValue);
-				Qtable.put(new_state, tmpQValue);
+				Qtable.put(new_state+previous_action, tmpQValue);
 				
 				/* See top for constants and below for helper functions */
 				
@@ -280,6 +273,8 @@ public class QLearningController extends Controller {
 		double maxQval = Double.NEGATIVE_INFINITY;
 		for (int i = 0; i < NUM_ACTIONS; i++) {
 			String test_pair = state + i; /* Generate a state-action pair for all actions */
+			//System.out.print("StateA: " + test_pair + "\n");
+			
 			double Qval = 0;
 			if (Qtable.get(test_pair) != null) {
 				Qval = Qtable.get(test_pair);
