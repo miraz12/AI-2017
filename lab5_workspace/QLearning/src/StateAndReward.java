@@ -33,11 +33,11 @@ public class StateAndReward {
 		double reward = 0;
 
 		
-		if(angle < -0.02)
+		if(angle < -0.1)
 		{
 			reward = - Math.abs(angle);
 		}
-		else if(angle > 0.02)
+		else if(angle > 0.1)
 		{
 			reward = - Math.abs(angle);
 		}
