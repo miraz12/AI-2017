@@ -5,8 +5,22 @@ public class StateAndReward {
 	public static String getStateAngle(double angle, double vx, double vy) {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
-
-		String state = "OneStateToRuleThemAll";
+		
+		
+		String state;
+		
+		if(angle < -0.02)
+		{
+			state = "TiltingRight";
+		}
+		else if(angle > 0.02)
+		{
+			state = "TiltingLeft";
+		}
+		else
+		{
+			state = "Upright";
+		}
 		
 		return state;
 	}
@@ -18,6 +32,20 @@ public class StateAndReward {
 		
 		double reward = 0;
 
+		
+		if(angle < -0.02)
+		{
+			reward = -1;
+		}
+		else if(angle > 0.02)
+		{
+			reward = -1;
+		}
+		else
+		{
+			reward = 1;
+		}
+		
 		return reward;
 	}
 

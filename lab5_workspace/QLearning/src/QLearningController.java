@@ -10,6 +10,8 @@ import java.util.Random;
  * -Implement missing parts of Q-learning
  * -Tune state and reward function, and parameters below if the result is not satisfactory */
 
+
+
 public class QLearningController extends Controller {
 	
 	/* These are the agents senses (inputs) */
@@ -32,6 +34,15 @@ public class QLearningController extends Controller {
 	double previous_vy = 0;
 	double previous_angle = 0;
 	int previous_action = 0; 
+	
+	public enum eActions
+	{
+		noAction
+		,rightRocket
+		,leftRocket
+		,middleRocket
+	}
+
 	
 	/* The tables used by Q-learning */
 	Hashtable<String, Double> Qtable = new Hashtable<String, Double>(); /* Contains the Q-values - the state-action utilities */
@@ -85,6 +96,41 @@ public class QLearningController extends Controller {
 	/* Performs the chosen action */
 	void performAction(int action) {
 
+		resetRockets();		
+		
+		if(action == 0)
+		{
+			
+		}
+		else if(action == 1)
+		{
+			middleEngine.setBursting(true);
+		}
+		else if(action == 2)
+		{
+			leftEngine.setBursting(true);
+		}
+		else if(action == 3)
+		{
+			rightEngine.setBursting(true);
+		}
+		else if(action == 4)
+		{
+			middleEngine.setBursting(true);
+			leftEngine.setBursting(true);
+		}
+		else if(action == 5)
+		{
+			middleEngine.setBursting(true);
+			rightEngine.setBursting(true);
+		}
+		else if(action == 6)
+		{
+			middleEngine.setBursting(true);
+			leftEngine.setBursting(true);
+			rightEngine.setBursting(true);
+		}
+		
 		/* Fire zeh rockets! */
 		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
 		
@@ -125,6 +171,8 @@ public class QLearningController extends Controller {
 
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
+				
+				
 				
 				/* See top for constants and below for helper functions */
 				
