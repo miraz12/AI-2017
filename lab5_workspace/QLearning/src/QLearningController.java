@@ -96,11 +96,11 @@ public class QLearningController extends Controller {
 	/* Performs the chosen action */
 	void performAction(int action) {
 
-		resetRockets();		
+				
 		
 		if(action == 0)
 		{
-			
+			resetRockets();
 		}
 		else if(action == 1)
 		{
@@ -167,12 +167,49 @@ public class QLearningController extends Controller {
 				/* Update Q value */
 				if (Qtable.get(prev_stateaction) == null) {
 					Qtable.put(prev_stateaction, 0.0);
-				} 
+				}
 
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
+				double tmpQValue = 0;
+				double prevQVal = Qtable.get(prev_stateaction);
+				//System.out.println("size of table: " + Qtable.size() );
+//				Qtable.get(new_state)
+//				alpha(Ntable.get(new_state))
+//				(
+//				StateAndReward.getRewardAngle(angle.getValue(), vx.getValue(), vy.getValue())
+//				+
+//				GAMMA_DISCOUNT_FACTOR
+//				getMaxActionQValue(new_state)
+//				-
+//				Qtable.get(new_state)
+//				)
 				
+//				tmpQValue =   Qtable.get(new_state) +
+//						alpha(Ntable.get(new_state))*
+//						(
+//						StateAndReward.getRewardAngle(angle.getValue(), vx.getValue(), vy.getValue())
+//						+
+//						GAMMA_DISCOUNT_FACTOR *
+//						getMaxActionQValue(new_state)
+//						-
+//						Qtable.get(new_state)
+//						);
 				
+				//System.out.println("Alpha: " + alpha(Ntable.get(prev_stateaction)));
+				tmpQValue =   prevQVal +
+						alpha(Ntable.get(prev_stateaction))*
+						(
+						previous_reward
+						+
+						GAMMA_DISCOUNT_FACTOR *
+						getMaxActionQValue(new_state)
+						-
+						prevQVal
+						);
+				
+				//System.out.println("tmpval: " + tmpQValue);
+				Qtable.put(new_state, tmpQValue);
 				
 				/* See top for constants and below for helper functions */
 				
@@ -252,6 +289,7 @@ public class QLearningController extends Controller {
 				action = i;
 			}
 		}
+		//System.out.println("action truly is: " + action);
 		return action;
 	}
 
