@@ -11,7 +11,6 @@ INDEX VERSION 1.126+/home/martin/AILabs/AI-2017/lab5_workspace/.metadata/.plugin
 3888198363.index
 742522455.index
 2630498905.index
-1805941987.index
 1955509740.index
 2841451250.index
 2982035129.index
