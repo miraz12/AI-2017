@@ -100,7 +100,7 @@ public class QLearningController extends Controller {
 		
 		if(action == 0)
 		{
-			resetRockets();
+			//do nothing
 		}
 		else if(action == 1)
 		{
@@ -116,19 +116,15 @@ public class QLearningController extends Controller {
 		}
 		else if(action == 4)
 		{
-			middleEngine.setBursting(true);
-			leftEngine.setBursting(true);
+			resetRockets();
 		}
 		else if(action == 5)
 		{
-			middleEngine.setBursting(true);
-			rightEngine.setBursting(true);
+			resetRockets();
 		}
 		else if(action == 6)
 		{
-			middleEngine.setBursting(true);
-			leftEngine.setBursting(true);
-			rightEngine.setBursting(true);
+			resetRockets();
 		}
 		
 		/* Fire zeh rockets! */
@@ -170,9 +166,8 @@ public class QLearningController extends Controller {
 				}
 
 				
-				/* TODO: IMPLEMENT Q-UPDATE HERE! */
-				double tmpQValue = 0;
-				double prevQVal = Qtable.get(prev_stateaction);
+				
+				
 				//System.out.println("size of table: " + Qtable.size() );
 //				Qtable.get(new_state)
 //				alpha(Ntable.get(new_state))
@@ -185,37 +180,55 @@ public class QLearningController extends Controller {
 //				Qtable.get(new_state)
 //				)
 				
-//				tmpQValue =   Qtable.get(new_state) +
-//						alpha(Ntable.get(new_state))*
+				
+				
+				//System.out.println("Alpha: " + alpha(Ntable.get(prev_stateaction)));
+//				tmpQValue =   prevQVal +
+//						alpha(Ntable.get(prev_stateaction))*
 //						(
-//						StateAndReward.getRewardAngle(angle.getValue(), vx.getValue(), vy.getValue())
+//						previous_reward
 //						+
 //						GAMMA_DISCOUNT_FACTOR *
 //						getMaxActionQValue(new_state)
 //						-
-//						Qtable.get(new_state)
+//						prevQVal
 //						);
 				
-				//System.out.println("Alpha: " + alpha(Ntable.get(prev_stateaction)));
-				tmpQValue =   prevQVal +
-						alpha(Ntable.get(prev_stateaction))*
-						(
-						previous_reward
-						+
-						GAMMA_DISCOUNT_FACTOR *
-						getMaxActionQValue(new_state)
-						-
-						prevQVal
-						);
-				
 				//System.out.println("tmpval: " + tmpQValue);
-				Qtable.put(new_state, tmpQValue);
+				
 				
 				/* See top for constants and below for helper functions */
 				
 				
+				
+				/* TODO: IMPLEMENT Q-UPDATE HERE! */
+				double tmpQValue = 0;
+				double newQval = 0; 
+				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
-
+				
+				String new_stateaction = new_state + action;
+				
+				if (Ntable.get(new_stateaction) == null) {
+					Ntable.put(new_stateaction, 0);
+				}
+				if (Qtable.get(new_stateaction) == null) {
+					Qtable.put(new_stateaction, 0.0);
+				}
+				
+				newQval = Qtable.get(new_stateaction);
+				tmpQValue =   newQval +
+						alpha(Ntable.get(new_stateaction))*
+						(
+						StateAndReward.getRewardAngle(angle.getValue(), vx.getValue(), vy.getValue())
+						+
+						GAMMA_DISCOUNT_FACTOR *
+						getMaxActionQValue(new_state)
+						-
+						newQval
+						);
+				
+				Qtable.put(new_stateaction , tmpQValue);
 				performAction(action);
 				
 				/* Only print every 10th line to reduce spam */

@@ -35,15 +35,15 @@ public class StateAndReward {
 		
 		if(angle < -0.02)
 		{
-			reward = -1;
+			reward = - Math.abs(angle);
 		}
 		else if(angle > 0.02)
 		{
-			reward = -1;
+			reward = - Math.abs(angle);
 		}
 		else
 		{
-			reward = 1;
+			reward = Math.PI * 20;
 		}
 		
 		return reward;
