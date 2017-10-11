@@ -113,20 +113,7 @@ public class QLearningController extends Controller {
 		else if(action == 3)
 		{
 			rightEngine.setBursting(true);
-		}
-		else if(action == 4)
-		{
-			resetRockets();
-		}
-		else if(action == 5)
-		{
-			resetRockets();
-		}
-		else if(action == 6)
-		{
-			resetRockets();
-		}
-		
+		}		
 		/* Fire zeh rockets! */
 		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
 		
@@ -137,16 +124,18 @@ public class QLearningController extends Controller {
 	/* Main decision loop. Called every iteration by the simulator */
 	public void tick(int currentTime) {
 		iteration++;
+		if(iteration % 10000 == 0)
+			System.out.println(Qtable.size());
 		
 		if (!paused) {
-			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
+			String new_state = StateAndReward.getStateHover(angle.getValue(), vx.getValue(), vy.getValue());
 
 			/* Repeat the chosen action for a while, hoping to reach a new state. This is a trick to speed up learning on this problem. */
 			action_counter++;
 			if (new_state.equals(previous_state) && action_counter < REPEAT_ACTION_MAX) {
 				return;
 			}
-			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
+			double previous_reward = StateAndReward.getRewardHover(previous_angle, previous_vx, previous_vy);
 			action_counter = 0;
 
 			/* The agent is in a new state, do learning and action selection */
@@ -166,7 +155,8 @@ public class QLearningController extends Controller {
 				}
 
 				
-				
+				double tmpQValue = 0;
+				double prevQVal = 0; 
 				
 				//System.out.println("size of table: " + Qtable.size() );
 //				Qtable.get(new_state)
@@ -180,19 +170,19 @@ public class QLearningController extends Controller {
 //				Qtable.get(new_state)
 //				)
 				
-				
+				prevQVal = Qtable.get(prev_stateaction);
 				
 				//System.out.println("Alpha: " + alpha(Ntable.get(prev_stateaction)));
-//				tmpQValue =   prevQVal +
-//						alpha(Ntable.get(prev_stateaction))*
-//						(
-//						previous_reward
-//						+
-//						GAMMA_DISCOUNT_FACTOR *
-//						getMaxActionQValue(new_state)
-//						-
-//						prevQVal
-//						);
+				tmpQValue =   prevQVal +
+						alpha(Ntable.get(prev_stateaction))*
+						(
+						previous_reward
+						+
+						GAMMA_DISCOUNT_FACTOR *
+						getMaxActionQValue(new_state)
+						-
+						prevQVal
+						);
 				
 				//System.out.println("tmpval: " + tmpQValue);
 				
@@ -202,33 +192,35 @@ public class QLearningController extends Controller {
 				
 				
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
-				double tmpQValue = 0;
-				double newQval = 0; 
+//				double tmpQValue = 0;
+//				double newQval = 0; 
+				
+				Qtable.put(prev_stateaction , tmpQValue);
 				
 				int action = selectAction(new_state); /* Make sure you understand how it selects an action */
 				
-				String new_stateaction = new_state + action;
-				
-				if (Ntable.get(new_stateaction) == null) {
-					Ntable.put(new_stateaction, 0);
-				}
-				if (Qtable.get(new_stateaction) == null) {
-					Qtable.put(new_stateaction, 0.0);
-				}
-				
-				newQval = Qtable.get(new_stateaction);
-				tmpQValue =   newQval +
-						alpha(Ntable.get(new_stateaction))*
-						(
-						StateAndReward.getRewardAngle(angle.getValue(), vx.getValue(), vy.getValue())
-						+
-						GAMMA_DISCOUNT_FACTOR *
-						getMaxActionQValue(new_state)
-						-
-						newQval
-						);
-				
-				Qtable.put(new_stateaction , tmpQValue);
+//				String new_stateaction = new_state + action;
+//				
+//				if (Ntable.get(new_stateaction) == null) {
+//					Ntable.put(new_stateaction, 0);
+//				}
+//				if (Qtable.get(new_stateaction) == null) {
+//					Qtable.put(new_stateaction, 0.0);
+//				}
+//				
+//				newQval = Qtable.get(new_stateaction);
+//				tmpQValue =   newQval +
+//						alpha(Ntable.get(new_stateaction))*
+//						(
+//						StateAndReward.getRewardHover(angle.getValue(), vx.getValue(), vy.getValue())
+//						+
+//						GAMMA_DISCOUNT_FACTOR *
+//						getMaxActionQValue(new_state)
+//						-
+//						newQval
+//						);
+//				
+//				Qtable.put(new_stateaction , tmpQValue);
 				performAction(action);
 				
 				/* Only print every 10th line to reduce spam */
